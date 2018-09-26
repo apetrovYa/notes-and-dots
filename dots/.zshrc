@@ -1,8 +1,10 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-# Path to your oh-my-zsh installation.
-export ZSH=/home/andov/.oh-my-zsh
+export MY_USERNAME="andov"
+
+# PATH TO YOUR OH-MY-ZSH INSTALLATION.
+export ZSH="/home/${MY_USERNAME}/.oh-my-zsh"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -109,29 +111,38 @@ export GOPATH="$HOME/Documents/go"
 
 
 #
-#
-# Export the used keys
-#
-#
-# The IKS -- working key
+# EXPORT THE USED KEYS
+# 
 ssh-add ~/.ssh/iks_id_rsa
-# The GSS -- working within customer's key
-ssh-add ~/.ssh/generali_id_rsa
 
 #
-# Mount the Network File System of IKS on this computer
+# MOUNT THE NETWORK FILE SYSTEM ON THIS COMPUTER
 #
 # This function requires the username and password
 # of the user to mount the disk
 #
-function mount_iks_nfs () {
+function mount_nfs () {
+	## Local variables
 	local username="${NFS_DOMAIN_USERNAME}"
 	local password="${NFS_DOMAIN_PASSWORD}"
-	mkdir -p /home/apetrov/shares/iks_nfs
+	local target_dir_to_mount="/home/${MY_USERNAME}/shares/nfs"
+	local source_ip_address_for_nfs_server="//192.168.100.155/"
+
+	
+	if [ -d "${target_dir_to_mount}" ]
+	then
+		echo "NFS target directory exists."
+		echo "I will mount it later."
+	else
+		echo "NFS target directory does not exist."
+		mkdir -p "${target_dir_to_mount}"
+	fi
+
+	
 	sudo mount -t cifs \
 		   -o username="${username}",password="${password}" \
-		   --source //192.168.100.155/ \
-		   --target /home/apetrov/shares/iks_nfs
+		   --source "${source_ip_address_for_nfs_server}" \
+		   --target "${target_dir_to_mount}"
 }
 
 
