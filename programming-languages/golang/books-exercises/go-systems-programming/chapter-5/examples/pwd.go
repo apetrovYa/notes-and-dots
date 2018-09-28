@@ -34,7 +34,7 @@ import (
 	"path/filepath"
 )
 
-const v string = "0.2"
+const v string = "0.3"
 
 func usage() {
 	fmt.Println("NAME")
@@ -63,9 +63,9 @@ func physical(fpath string) {
 	fileinfo, _ := os.Lstat(fpath)
 	if fileinfo.Mode()&os.ModeSymlink != 0 {
 		realpath, _ := filepath.EvalSymlinks(fpath)
-		fmt.Println(realpath)
+		logical(realpath)
 	} else {
-		fmt.Println(fpath)
+		logical(fpath)
 	}
 }
 
